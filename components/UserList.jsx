@@ -15,8 +15,9 @@ export default function UserList({ list, setUser }) {
 
 const UserItem = ({ data, setUser }) => {
     return <Pressable style={styles.userItem} onPress={()=>{setUser(data)}}>
-        <View style={{ ...styles.userImage, backgroundColor: data.image, borderColor:(data.status === "online" ? "#2f3" : "white") }}></View>
-        {/* <View style={{}}></View> */}
+        <View style={{ ...styles.userImage, backgroundColor: data.image }}>
+            <View style={{...styles.userLine, opacity:(data.status === "online" ? 1:0)}}></View>
+        </View>
         <Text style={{ color: "#000" }}>{data.name}</Text>
     </Pressable >
 }
@@ -40,9 +41,22 @@ const styles = StyleSheet.create({
     userImage: {
         width: 45,
         height: 45,
-        boxShadow: "0 0 3px black",
         borderRadius: "50%",
         borderWidth: 3,
+        position: "relative",
         borderColor: "transparent"
+    },
+    userLine : {
+        flex: 1,
+        borderWidth: 2,
+        borderColor: "#fff",
+        position: "absolute",
+        right: -2,
+        bottom: -2,
+        zIndex:2,
+        width: 15,
+        height: 15,
+        borderRadius: "50%",
+        backgroundColor: "#2f3",
     }
 });
