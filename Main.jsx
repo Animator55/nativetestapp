@@ -19,7 +19,7 @@ export default function Main() {
             "image": "rgb(222, 28, 3)",
             "name": "Lupe Garrison",
             "phone": "+1 (998) 452-3392"
-          }
+        }
     )
     React.useEffect(() => {
         if (!list) setList(userList)
@@ -32,13 +32,13 @@ export default function Main() {
         ...styles.container, paddingTop: insets.top,
         //   paddingBottom: insets.bottom
     }}>
-        {!user ?<>
+        {!user ? <>
             <Top />
             <UserList list={list} setUser={setUser} />
             <NavBar currentPage={currentPage} />
         </>
-        : 
-        <Chat user={user} setUser={setUser}/>
+            :
+            <Chat user={user} setUser={setUser} />
         }
     </View>
 }

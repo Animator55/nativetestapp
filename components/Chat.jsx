@@ -3,13 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import React from "react"
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
 import fixNum from "../fixNum"
+import { messagePh } from "../defaults/messagePh"
 
-const newMessage = (value) => {
+const newMessage = (value, owner) => {
     let date = new Date()
     return {
         _id: `${Math.random()}`, text: value,
         timestamp: fixNum(date.getHours()) +":"+fixNum(date.getMinutes()),
-        owner: "user"
+        owner: owner
     }
 }
 
@@ -42,7 +43,12 @@ export default function Chat({ user, setUser }) {
     const sendMessage = () => {
         if (!inputRef.current|| inputRef.current.value === "") return
         let value = inputRef.current.value
-        setMessages([...messages, newMessage(value)])
+        let newValue = [...messages, newMessage(value, "user")]
+        setMessages(newValue)
+        if(user.status === "online") setTimeout(()=>{
+            let random = Math.round(Math.random() * messagePh.length)
+            setMessages([...newValue, newMessage(messagePh[random], "other")])
+        }, 100)
     }
 
     const InputZone = () => {
@@ -55,7 +61,7 @@ export default function Chat({ user, setUser }) {
     }
 
     const Message = ({ data }) => {
-        return <View style={styles.message}>
+        return <View style={{...styles.message, marginLeft: data.owner === "user" ? "auto": "",marginRight: data.owner === "other" ? "auto": ""}}>
             <Text>{data.text}</Text>
             <Text style={styles.date}>{data.timestamp}</Text>
         </View>
@@ -142,7 +148,6 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         margin: 3,
         marginHorizontal: 8,
-        marginLeft: "auto",
     },
     date: {
         fontSize: 11,
