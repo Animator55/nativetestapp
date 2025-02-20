@@ -1,6 +1,6 @@
 
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faAppleAlt } from "@fortawesome/free-solid-svg-icons/faAppleAlt";
-import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Pressable, StyleSheet } from "react-native";
 import { Text, View } from "react-native";
@@ -16,7 +16,7 @@ export default function Top (){
                 console.log("a")
             }}
         >
-        <FontAwesomeIcon icon={faBars}/>
+        <FontAwesomeIcon icon={faMagnifyingGlass}/>
         </Pressable>
     </View>
 }
