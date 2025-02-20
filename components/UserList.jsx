@@ -1,6 +1,5 @@
 import React from "react";
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import Chat from "./Chat";
 
 export default function UserList({ list, setUser }) {
     return !list ? 
