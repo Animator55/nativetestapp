@@ -1,52 +1,69 @@
-
-import { Pressable, StyleSheet, View, Text } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { Camera } from 'expo-camera';
 import NavBar from '../components/NavBar';
-import React from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Camera } from 'expo-camera'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
+export default function CameraPage () {
+  const [hasPermission, setHasPermission] = useState(null);
+  const cameraRef = useRef(null);
+  const [photoUri, setPhotoUri] = useState(null);
 
-export default function CameraPage() {
-    const [cameraState, setCamera] = React.useState(false)
-    const __startCamera = async () => {
-        const { status } = await Camera.requestPermissionsAsync()
-        if (status === 'granted') {
-            setCamera(true)
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
-        } else {
-            Alert.alert("Access denied")
-        }
+  const takePhoto = async () => {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync();
+      setPhotoUri(photo.uri);
+      console.log('pic:', photo.uri);
     }
-    const insets = useSafeAreaInsets()
+  };
 
-    const currentPage = "camera"
-    let camera
-    return <View style={{
-        ...styles.container, paddingTop: insets.top,
-        //   paddingBottom: insets.bottom
-    }}>
-        {!cameraState ?
-            <Pressable onPress={()=>{
-                __startCamera()
-            }}>
-                <Text>Activate Camera</Text>
-            </Pressable>
-            :
-            <Text>Camera Active</Text>
-            // <Camera
-            //     style={{ flex: 1, width: "100%" }}
-            //     ref={(r) => {
-            //         camera = r
-            //     }}
-            // ></Camera>
-        }
-        <NavBar currentPage={currentPage} />
+  if (hasPermission === null) {
+    return <View style={styles.container}>
+        <Text>Requesting access...</Text>
     </View>
-}
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={styles.container}>
+        <Text>Access not granted</Text>
+        <Pressable
+          onPress={async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            setHasPermission(status === 'granted');
+          }}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Allow Access</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  let currentPage = "camera"
+
+  return (
+    <View style={styles.container}>
+      {/* <Camera ref={cameraRef} style={styles.camera} /> */}
+      <Text style={styles.text}>Camera not available</Text>
+      <NavBar currentPage={currentPage} />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
+  container: { flex: 1, justifyContent: 'center', backgroundColor: "black", },
+  camera: { flex: 1 },
+  button: { backgroundColor: 'transparent', padding: 15, margin: 20, borderRadius: 10, alignItems: 'center' },
+  text: { color: 'white', fontSize: 16, margin: "auto" },
+  previewText: { textAlign: 'center', marginTop: 10, color: 'gray' },
 });
+
