@@ -1,5 +1,5 @@
 
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, Text } from 'react-native';
 import NavBar from '../components/NavBar';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,19 +25,20 @@ export default function CameraPage() {
         ...styles.container, paddingTop: insets.top,
         //   paddingBottom: insets.bottom
     }}>
-        {cameraState ?
+        {!cameraState ?
             <Pressable onPress={()=>{
                 __startCamera()
             }}>
                 <Text>Activate Camera</Text>
             </Pressable>
             :
-            <Camera
-                style={{ flex: 1, width: "100%" }}
-                ref={(r) => {
-                    camera = r
-                }}
-            ></Camera>
+            <Text>Camera Active</Text>
+            // <Camera
+            //     style={{ flex: 1, width: "100%" }}
+            //     ref={(r) => {
+            //         camera = r
+            //     }}
+            // ></Camera>
         }
         <NavBar currentPage={currentPage} />
     </View>
@@ -46,6 +47,6 @@ export default function CameraPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
     },
 });
